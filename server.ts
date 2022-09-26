@@ -17,8 +17,7 @@ app.get('/users', (req, res) => {
 
 app.post('/users', async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const user: User = {
       name: req.body.name,
@@ -28,10 +27,30 @@ app.post('/users', async (req, res) => {
     users.push(user);
 
     res.status(201).send();
-  } catch (error) {
-    console.log(error);
+  } catch (errors) {
+    res.status(500).send(errors);
+  }
+});
 
-    res.status(500).send();
+app.post('/users/login', async (req, res) => {
+  if (users.length === 0) {
+    res.status(200).send('No Users');
+  }
+
+  const user = users.find((user) => user.name === req.body.name);
+
+  if (user === null) {
+    return res.status(400).send('Cannot find user');
+  }
+
+  try {
+    if (await bcrypt.compare(req.body.password, user!.password)) {
+      res.send('Success');
+    } else {
+      res.send('Not Allowed');
+    }
+  } catch (errors) {
+    res.status(500).send(errors);
   }
 });
 

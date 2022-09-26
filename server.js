@@ -22,8 +22,7 @@ app.get('/users', (req, res) => {
 });
 app.post('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const salt = yield bcrypt_1.default.genSalt();
-        const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
+        const hashedPassword = yield bcrypt_1.default.hash(req.body.password, 10);
         const user = {
             name: req.body.name,
             password: hashedPassword,
@@ -31,9 +30,28 @@ app.post('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         users.push(user);
         res.status(201).send();
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).send();
+    catch (errors) {
+        res.status(500).send(errors);
+    }
+}));
+app.post('/users/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (users.length === 0) {
+        res.status(200).send('No Users');
+    }
+    const user = users.find((user) => user.name === req.body.name);
+    if (user === null) {
+        return res.status(400).send('Cannot find user');
+    }
+    try {
+        if (yield bcrypt_1.default.compare(req.body.password, user.password)) {
+            res.send('Success');
+        }
+        else {
+            res.send('Not Allowed');
+        }
+    }
+    catch (errors) {
+        res.status(500).send(errors);
     }
 }));
 app.listen(3000);
