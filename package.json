@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsc && nodemon server.js"
+    "dev": "nodemon server.js",
+    "tsc-watch": "npx tsc -watch"
   },
   "keywords": [],
   "author": "",
