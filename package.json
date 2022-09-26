@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm tsc && nodemon server.js"
+    "dev": "npx tsc && nodemon server.js"
   },
   "keywords": [],
   "author": "",
