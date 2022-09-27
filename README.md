@@ -1,0 +1,3 @@
+- `pnpm i`
+- `pnpm tsc-watch`
+- `pnpm dev`
